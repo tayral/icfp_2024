@@ -5,4 +5,4 @@ In this repository, you will find jupyter notebooks that correspond to the exerc
 
 
 
-![Quantum circuit](image_cours.png)
+![Quantum circuit](logo_cours.png)
