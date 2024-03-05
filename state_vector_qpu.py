@@ -9,11 +9,15 @@ class State:
         self.state = np.zeros(self.shape, np.complex128)
         self.state[(0,)*nqbits] = 1
         
-    def apply(self, gate, qbits, param=None):
+    def apply(self, gate_matrix, qbits):
+        """
+        Args:
+            gate (np.array): gate matrix
+            qbits (list<int>): qubits on which the gate acts
+        """
         self.state = np.moveaxis(self.state, qbits, np.arange(len(qbits)))
         self.state = np.reshape(self.state, (2**len(qbits), 2**(self.nqbits - len(qbits))))
-        matrix = gate_dic[gate] if param is None else gate_dic[gate](param)
-        self.state = matrix.dot(self.state)
+        self.state = gate_matrix.dot(self.state)
         self.state = np.reshape(self.state, self.shape)
         self.state = np.moveaxis(self.state, np.arange(len(qbits)), qbits)
         
@@ -29,12 +33,19 @@ class State:
         return np.reshape(self.state, 2**self.nqbits)
     
 class StateVectorQPU:
-    def __init__(self, nqbits):
+    """
+    Args:
+        nqbits (int): number of qubits
+        gate_dic (dic{string, matrix or lambda(matrix)): keys: gate names, values: matrices
+    """
+    def __init__(self, nqbits, gate_dic):
         self.state = State(nqbits)
-        
+        self.gate_dic = gate_dic
     def submit(self, circuit):
         assert(circuit.nqbits == self.state.nqbits)
         for gate_tuple in circuit.gates:
-            self.state.apply(*gate_tuple)
+            matrix = self.gate_dic[gate_tuple[0]] if len(gate_tuple)==2\
+                        else self.gate_dic[gate_tuple[0]](gate_tuple[2])
+            self.state.apply(matrix, gate_tuple[1])
             
         return self.state
