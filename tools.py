@@ -8,6 +8,11 @@ gate_dic = {
                       [0, 0, 0, 1],
                       [0, 0, 1, 0]
                      ]),
+    "X": np.array([[0, 1], [1, 0]], dtype=np.complex128),
+    "Y": np.array([[0, -1j], [1j, 0]], dtype=np.complex128),
+    "Z": np.array([[1, 0], [0, -1]], dtype=np.complex128),
+    "S": np.array([[1, 0], [0, 1j]], dtype=np.complex128),
+    "Sdag": np.array([[1, 0], [0, -1j]], dtype=np.complex128),
     "RX": lambda theta : np.cos(theta/2) * np.identity(2) - 1j * np.sin(theta/2)*np.array([[0, 1], [1, 0]], np.complex128),
     "RY": lambda theta : np.cos(theta/2) * np.identity(2) - 1j * np.sin(theta/2)*np.array([[0, -1j], [1j, 0]], np.complex128),
     "RZ": lambda theta : np.cos(theta/2) * np.identity(2) - 1j * np.sin(theta/2)*np.array([[1, 0], [0, -1]], np.complex128)
